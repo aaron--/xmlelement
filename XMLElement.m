@@ -192,7 +192,7 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
       if(xmlStrcmp(cursor->name, tagNameXML) && ![tagName isEqual:@"*"]) continue;
       return [[XMLElement alloc] initWithDoc:self.doc node:cursor];
     }
-    while(( cursor = cursor->next ));
+    while(cursor && (cursor = cursor->next));
   }
   
   // For Multiple Components, Recurse Down
@@ -209,7 +209,7 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
       found = [self find:newQuery from:cursor];
       if(found) return found;
     }
-    while(( cursor = cursor->next ));
+    while(cursor && (cursor = cursor->next));
   }
   
   // No matches found
@@ -247,7 +247,7 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
       if(xmlStrcmp(cursor->name, tagNameXML) && ![tagName isEqual:@"*"]) continue;
       block([[XMLElement alloc] initWithDoc:self.doc node:cursor]);
     }
-    while(( cursor = cursor->next ));
+    while(cursor && (cursor = cursor->next));
   }
   
   // For Multiple Components, Recurse Down
@@ -263,7 +263,7 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
       if(xmlStrcmp(cursor->name, tagNameXML) && ![tagName isEqual:@"*"]) continue;
       [self find:newQuery from:cursor forEach:block];
     }
-    while(( cursor = cursor->next ));
+    while(cursor && (cursor = cursor->next));
   }
 }
 
