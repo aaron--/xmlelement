@@ -17,7 +17,7 @@
 @property (readonly) NSDictionary*  attributes;
 
 - (XMLElement*)find:(NSString*)query;
-- (void)find:(NSString*)query forEach:(void(^)(XMLElement*))block;
+- (void)find:(NSString*)query forEach:(void(^)(XMLElement* element))block;
 
 @end
 

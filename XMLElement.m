@@ -156,7 +156,7 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
   return [self find:query from:self.node];
 }
 
-- (void)find:(NSString*)query forEach:(void(^)(XMLElement*))block
+- (void)find:(NSString*)query forEach:(void(^)(XMLElement* element))block
 {
   [self find:query from:self.node forEach:block];
 }
