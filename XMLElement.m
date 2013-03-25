@@ -163,11 +163,11 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
 
 - (XMLElement*)find:(NSString*)query from:(xmlNode*)from
 {
-  NSArray*    components;
-  NSString*   tagName;
-  xmlChar*    tagNameXML;
-  xmlNode*    cursor;
-  NSString*   newQuery;
+  NSArray*      components;
+  NSString*     tagName;
+  xmlChar*      tagNameXML;
+  xmlNode*      cursor;
+  NSString*     newQuery;
   XMLElement*   found;
   
   // Require Query
@@ -265,6 +265,51 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
     }
     while(cursor && (cursor = cursor->next));
   }
+}
+
+- (NSString*)debugDescription
+{
+  return [self descriptionWithIndent:0];
+}
+
+- (NSString*)descriptionWithIndent:(NSInteger)indent
+{
+  NSInteger   tabs = indent;
+  NSString*   whitespace = @"";
+  NSString*   attr = @"";
+  NSString*   open;
+  NSString*   kids = @"";
+  NSString*   close;
+  xmlNode*    cursor;
+  BOOL        foundElementInKids = NO;
+  
+  // Basic Strings
+  while(tabs--)
+    whitespace = [whitespace stringByAppendingString:@"  "];
+  for(NSString* attrKey in self.attributes)
+    attr = [attr stringByAppendingFormat:@"%@=\"%@\"", attrKey, self.attributes[attrKey]];
+  open = [NSString stringWithFormat:@"<%@%@>", self.name, attr];
+  close = [NSString stringWithFormat:@"</%@>", self.name];
+  
+  // Iterate Child Nodes
+  cursor = self.node->children;
+  do {
+    if(!cursor) continue;
+    if(cursor->type == XML_ELEMENT_NODE) {
+      kids = [kids stringByAppendingString:[[[XMLElement alloc] initWithDoc:self.doc node:cursor] descriptionWithIndent:indent+1]];
+      foundElementInKids = YES;
+    }
+    if(cursor->type == XML_TEXT_NODE || cursor->type == XML_ELEMENT_CONTENT_PCDATA)
+      kids = [kids stringByAppendingFormat:@"%@", cursor->content ? [NSString stringWithUTF8String:(const char*)cursor->content] : @""];
+  } while(cursor && (cursor = cursor->next));
+  
+  return [NSString stringWithFormat:@"\n%@%@%@%@%@%@",
+          whitespace,
+          open,
+          kids,
+          foundElementInKids ? @"\n" : @"",
+          foundElementInKids ? whitespace : @"",
+          close];
 }
 
 #pragma mark - Errors
