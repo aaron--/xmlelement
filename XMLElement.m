@@ -201,7 +201,7 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
     newQuery = [components componentsJoinedByString:@"."];
     
     // Recurse with Shortened Query for Every Node that matches component
-    cursor = cursor->children;
+    cursor = cursor ? cursor->children : nil;
     do {
       if(!cursor) continue;
       if(cursor->type != XML_ELEMENT_NODE) continue;
@@ -256,7 +256,7 @@ static xmlGenericErrorFunc silence = &XMLElementSilenceErrors;
     newQuery = [components componentsJoinedByString:@"."];
     
     // Recurse with Shortened Query for Every Node that matches component
-    cursor = cursor->children;
+    cursor = cursor ? cursor->children : nil;
     do {
       if(!cursor) continue;
       if(cursor->type != XML_ELEMENT_NODE) continue;
